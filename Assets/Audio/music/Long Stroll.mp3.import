@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://rbpeo7gla3np"
+path="res://.godot/imported/Long Stroll.mp3-80565f831c48ab1a2e2aa12a0e39ba5a.mp3str"
+
+[deps]
+
+source_file="res://audio/music/Long Stroll.mp3"
+dest_files=["res://.godot/imported/Long Stroll.mp3-80565f831c48ab1a2e2aa12a0e39ba5a.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

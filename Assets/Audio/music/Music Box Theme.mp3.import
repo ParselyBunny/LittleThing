@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://jths1ut8s1d6"
+path="res://.godot/imported/Music Box Theme.mp3-43a9ec03910217a977a67c43b4b3a306.mp3str"
+
+[deps]
+
+source_file="res://audio/music/Music Box Theme.mp3"
+dest_files=["res://.godot/imported/Music Box Theme.mp3-43a9ec03910217a977a67c43b4b3a306.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

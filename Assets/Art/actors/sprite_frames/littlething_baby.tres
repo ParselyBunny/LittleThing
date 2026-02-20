@@ -1,0 +1,56 @@
+[gd_resource type="SpriteFrames" load_steps=7 format=3 uid="uid://o3vpkhr3wc3x"]
+
+[ext_resource type="Texture2D" uid="uid://dopql4r3nik22" path="res://art/actors/baby/chewing animation/frame 1.png" id="1_bb5cl"]
+[ext_resource type="Texture2D" uid="uid://d0uyp4wxua0my" path="res://art/actors/baby/Moving animation/frame 1.png" id="1_owc30"]
+[ext_resource type="Texture2D" uid="uid://8lrmv8kyn32" path="res://art/actors/baby/chewing animation/frame 2.png" id="2_8p0ht"]
+[ext_resource type="Texture2D" uid="uid://oevw2dqxbwct" path="res://art/actors/baby/Moving animation/frame 2.png" id="2_n3i3y"]
+[ext_resource type="Texture2D" uid="uid://5lsc8bg4itgl" path="res://art/actors/baby/Moving animation/frame 3.png" id="3_rbips"]
+[ext_resource type="Texture2D" uid="uid://c1rauur716gyp" path="res://art/actors/baby/Moving animation/frame 4.png" id="4_71d58"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 0.8,
+"texture": ExtResource("1_bb5cl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_8p0ht")
+}],
+"loop": true,
+"name": &"eat",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_owc30")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_n3i3y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_rbips")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_71d58")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_owc30")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_n3i3y")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_rbips")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_71d58")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
