@@ -19,34 +19,3 @@ func _update_needs_change(changes: Dictionary):
 	needs[0].add_value(changes["hunger"])
 	needs[1].add_value(changes["fun"])
 	needs[2].add_value(changes["health"])
-
-
-# An individual need
-# Only intended to be used in the Stats class
-
-class MyNeed:
-	var label: String
-	var value: float
-	var maximum: float
-
-	func _init(_l, _v, _m):
-		label = _l
-		value = _v
-		maximum = _m
-
-	func update_value():
-		var decay = -1.0 # TODO: calculate decay based on diff between val and max
-		var new_val = value - decay
-		
-		add_value(new_val)
-
-	# _val can be negative or positive
-	func add_value(_val):
-		var new_val = value + _val
-		
-		if (new_val < 0):
-			value = 0
-		elif (new_val < maximum):
-			value = new_val
-		else:
-			value = maximum
