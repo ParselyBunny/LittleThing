@@ -1,28 +1,20 @@
-// Handle the Pet's vital statistics
+using UnityEngine;
 
+// Handle the Pet's vital statistics
 public class Stats
 {
-	Need[] needs =
-	[
-		// label, value, maximum, decay
-		MyNeed.new ("Hunger", 100.0, 100.0),
-		MyNeed.new ("Fun", 100.0, 100.0),
-		MyNeed.new ("Health", 100.0, 100.0)
-	];
+	Need Hunger = new("Hunger", 100f, 100f);
+	Need Fun = new("Fun", 100f, 100f);
+	Need Love = new("Love", 100f, 100f);
 
-	public void _update_needs()
+	public void Update()
 	{
-		// for each Need in Needs, update that needs
-		foreach (Need need in needs)
-		{
-			need.update_value();
-		}
+		Hunger.Update(Time.deltaTime);
+		Fun.Update(Time.deltaTime);
+		Love.Update(Time.deltaTime);
 	}
 
-	public void _update_needs_change(changes: Dictionary)
-	{
-		needs[0].add_value(changes["hunger"]);
-		needs[1].add_value(changes["fun"]);
-		needs[2].add_value(changes["health"]);
-	}
+	public float GetHunger() => Hunger.GetValue();
+	public float GetFun() => Fun.GetValue();
+	public float GetLove() => Love.GetValue();
 }

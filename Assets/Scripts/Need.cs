@@ -1,38 +1,40 @@
 
 public class Need
 {
-    private string label;
-	private float value;
-	private float maximum;
+    private string _label;
+	private float _value;
+	private float _maximum;
+	private float _decay = 0.01f;
 
     public Need(string label, float value, float maximum)
     {
-        this.label = label;
-        this.value = value;
-        this.maximum = maximum;
+        _label = label;
+        _value = value;
+        _maximum = maximum;
     }
 
-    public void Update()
+    public void Update(float deltaTime)
 	{
-        float decay = -1.0f;
-		var new_val = value - decay;
+		float val = deltaTime * (_value - _decay);
 
-		AddValue(new_val);
+		Add(val);
 	}
 
-	public float AddValue(float val)
+	public float GetValue() => _value;
+
+	private float Add(float change)
 	{
-		float new_val = value + val;
+		float val = _value + change;
 
-		if (new_val < 0)
+		if (val < 0)
 		{
-            new_val = 0;
+            val = 0;
 		}
-		else if (new_val > maximum)
+		else if (val > _maximum)
 		{
-            new_val = maximum;
+            val = _maximum;
 		}
 
-		return new_val;
+		return val;
     }
 }
