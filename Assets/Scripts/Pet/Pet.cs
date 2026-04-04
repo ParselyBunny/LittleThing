@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Image))]
 public class Pet : MonoBehaviour
 {
     private Stats _stats;
