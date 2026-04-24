@@ -10,9 +10,9 @@ public class SaveDataSystem : MonoBehaviour
 {
     [Header("File Storage Config")]
     [NonSerialized]
-    private GameData gameData;
-    private List<IDataPersistence> dataPersistenceObjects;
-    private FileUtility dataHandler;
+    private GameData _gameData;
+    private List<IDataPersistence> _dataPersistenceObjects;
+    private FileUtility _dataHandler;
 
     public static SaveDataSystem Main { get; private set; }
 
@@ -20,7 +20,7 @@ public class SaveDataSystem : MonoBehaviour
 
     public void NewGame()
     {
-        gameData = new GameData();
+        _gameData = new GameData();
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class SaveDataSystem : MonoBehaviour
             return;
         }
 
-        gameData = JsonUtility.FromJson<GameData>(saveFile.text);
+        _gameData = JsonUtility.FromJson<GameData>(saveFile.text);
 
         // Load dialogue data
         TextAsset dialogueFile = Resources.Load<TextAsset>($"DefaultSaves/{saveName}_dialogue");
@@ -54,24 +54,24 @@ public class SaveDataSystem : MonoBehaviour
             // Save dialogue file to persistent storage so Yarn can load it
             string dialoguePath = System.IO.Path.Combine(
                 UnityEngine.Application.persistentDataPath,
-                $"save_{gameData.SaveId}_dialogue");
+                $"save_{_gameData.SaveId}_dialogue");
             System.IO.File.WriteAllText(dialoguePath, dialogueFile.text);
         }
 
         // Push loaded data to all persistence objects
-        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
-            dataPersistenceObj.LoadData(gameData);
+            dataPersistenceObj.LoadData(_gameData);
         }
     }
 
     public void LoadGame(int saveSlotIndex)
     {
         // load any saved data from a file using the data handler
-        gameData = dataHandler.LoadFile("_" + saveSlotIndex.ToString());
+        _gameData = _dataHandler.LoadFile("_" + saveSlotIndex.ToString());
 
         // if no data can be loaded, initialize new game
-        if (gameData == null)
+        if (_gameData == null)
         {
             Debug.Log($"No save file found for slot {saveSlotIndex}. Starting new game.");
             NewGame();
@@ -79,9 +79,9 @@ public class SaveDataSystem : MonoBehaviour
         }
 
         // push the loaded data to all other scripts that need it
-        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
-            dataPersistenceObj.LoadData(gameData);
+            dataPersistenceObj.LoadData(_gameData);
         }
 
         Debug.Log($"Game loaded from slot {saveSlotIndex}.");
@@ -97,16 +97,16 @@ public class SaveDataSystem : MonoBehaviour
 
     public void SaveGame(int saveSlotIndex)
     {
-        gameData = new GameData(saveSlotIndex);
+        _gameData = new GameData(saveSlotIndex);
 
         // pass the data to other scripts so they can update it
-        foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects)
+        foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
         {
-            dataPersistenceObj.SaveData(ref gameData);
+            dataPersistenceObj.SaveData(ref _gameData);
         }
 
         // save that data to a file using the data handler
-        dataHandler.SaveFile(gameData, "_" + saveSlotIndex.ToString());
+        _dataHandler.SaveFile(_gameData, "_" + saveSlotIndex.ToString());
 
         Debug.Log($"Game saved to slot {saveSlotIndex}.");
     }
@@ -123,9 +123,9 @@ public class SaveDataSystem : MonoBehaviour
 
     private void Start()
     {
-        dataHandler = new FileUtility(
+        _dataHandler = new FileUtility(
             UnityEngine.Application.persistentDataPath, FileName);
-        dataPersistenceObjects = FindAllDataPersistenceObjects();
+        _dataPersistenceObjects = FindAllDataPersistenceObjects();
 
         // Start with a fresh game - press F9 to load autosave
         NewGame();

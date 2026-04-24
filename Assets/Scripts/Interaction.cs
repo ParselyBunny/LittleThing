@@ -4,10 +4,10 @@ using UnityEngine;
 // TODO: assetmenu stuff here
 public class Interaction : ScriptableObject
 {
-    string label;
-    string description;
-    Constants.TabCategories tab_category;
-    bool locked;
-    Texture2D icon;
-    Dictionary<string, float> stats_changes;
+    string _label;
+    string _description;
+    Constants.TabCategories _tabCategory;
+    bool _locked;
+    Texture2D _icon;
+    Dictionary<string, float> _statsChanges;
 }
