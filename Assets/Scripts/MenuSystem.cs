@@ -8,6 +8,7 @@ public class MenuSystem : MonoBehaviour
     public GameObject GameplayUI;
     public GameObject GameplayGeometry;
     public GameObject Store;
+    public GameObject Pet;
 
     private void Start()
     {
@@ -16,6 +17,7 @@ public class MenuSystem : MonoBehaviour
         GameplayUI.SetActive(false);
         GameplayGeometry.SetActive(false);
         Store.SetActive(false);
+        Pet.SetActive(false);
     }
 
     public void Play()
@@ -25,6 +27,7 @@ public class MenuSystem : MonoBehaviour
         GameplayUI.SetActive(true);
         GameplayGeometry.SetActive(true);
         Store.SetActive(false);
+        Pet.SetActive(true);
     }
 
     public void ToggleOptions()
