@@ -5,21 +5,26 @@ public class MenuSystem : MonoBehaviour
 {
     public GameObject MainMenu;
     public GameObject Options;
-    public GameObject Gameplay;
+    public GameObject GameplayUI;
+    public GameObject GameplayGeometry;
     public GameObject Store;
 
     private void Start()
     {
         MainMenu.SetActive(true);
         Options.SetActive(false);
+        GameplayUI.SetActive(false);
+        GameplayGeometry.SetActive(false);
         Store.SetActive(false);
-        Gameplay.SetActive(false);
     }
 
     public void Play()
     {
         MainMenu.SetActive(false);
-        Gameplay.SetActive(true);
+        Options.SetActive(false);
+        GameplayUI.SetActive(true);
+        GameplayGeometry.SetActive(true);
+        Store.SetActive(false);
     }
 
     public void ToggleOptions()
