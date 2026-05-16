@@ -7,6 +7,8 @@ public class GameData
     
     public int Version = CurrentVersion;
     public int SaveId;  // Save slot ID
+    public float MusicVolume;
+    public float SfxVolume;
 
     public GameData()
     {
@@ -17,5 +19,4 @@ public class GameData
     {
         SaveId = saveSlot;
     }
-
 }
