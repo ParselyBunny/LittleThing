@@ -1,63 +1,75 @@
-using UnityEditor;
 using UnityEngine;
+using System;
 
 public class Pet : MonoBehaviour
 {
-    public int MoveStrength = 1000;
+    public int MoveStrength = 100;
+
+    private const float MAX_SCALE = 0.75f;
 
     private Stats _stats;
     private Vector3 _acceleration;
+    private Vector3 _baseScale;
     private Rigidbody _rb;
+    private Animator _anim;
 
     private void Start()
     {
         _stats = new Stats();
         _acceleration = new Vector3();
+        _baseScale = transform.localScale;
         _rb = GetComponent<Rigidbody>();
+        _anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
     {
-        if (Time.frameCount % 5 == 0)
+        // Movement
+        if (Time.frameCount % 60 == 0)
         {
-            _acceleration = new Vector3(
-                Random.Range(-50f, 50f), 
-                0f, 
-                Random.Range(-50f, 50f)
-            );
+            _acceleration.x = UnityEngine.Random.Range(-50f, 50f);
+            _acceleration.y = 1f;
+            _acceleration.z = UnityEngine.Random.Range(-50f, 50f);
 
-            _rb.AddForce(MoveStrength * Time.deltaTime * _acceleration);
+            _rb.AddForce(MoveStrength * _acceleration);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _rb.AddForce(0f, 1000f * Time.deltaTime, 0f);
-        }
+        // Animation
+        transform.localScale = SquashAndStretch();
 
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            ResetVelocity();
-        }
-
-        HandleFallOutOfWorld();
-    }
-
-    public void HandleFallOutOfWorld()
-    {
+        // Handle falling out of world
         if (transform.position.y < Constants.WORLD_FLOOR)
         {
-            transform.position = Constants.START_POS;
-            ResetVelocity();
+            _rb.position = Constants.START_POS;
+            _rb.angularVelocity = Vector3.zero;
+            _rb.linearVelocity = Vector3.zero;
         }
     }
 
-    public void ResetVelocity()
+    private Vector3 SquashAndStretch()
     {
-        _rb.angularVelocity = Vector3.zero;
-        _rb.linearVelocity = Vector3.zero;
+        float velocityMagnitude = _rb.linearVelocity.magnitude;
+        float modifiedScale = _baseScale.x * velocityMagnitude;
+
+        if (modifiedScale <= _baseScale.x)
+        {
+            modifiedScale = _baseScale.x;
+        }
+        else if (modifiedScale >= MAX_SCALE)
+        {
+            modifiedScale = MAX_SCALE;
+        }
+
+        return new Vector3(
+            modifiedScale,
+            _baseScale.y,
+            _baseScale.z);
     }
 
-    public void Eat(Interaction interaction) { }
+    private void Eat(Interaction interaction)
+    {
+        throw new NotImplementedException();
+    }
 
     private void OnDrawGizmos()
     {
