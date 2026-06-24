@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEditor;
 
 public class Pet : MonoBehaviour
 {
@@ -7,13 +8,14 @@ public class Pet : MonoBehaviour
 
     private const float MAX_SCALE = 0.75f;
 
+    private Rigidbody _rb;
+    private Animator _anim;
     private Stats _stats;
-    private float _t;  // Scale interpolator
     private Vector3 _acceleration;
     private Vector3 _targetScale;
     private Vector3 _baseScale;
-    private Rigidbody _rb;
-    private Animator _anim;
+    private float _t;  // Scale interpolator
+    private bool _showDebug = true;
 
     private void Start()
     {
@@ -22,7 +24,7 @@ public class Pet : MonoBehaviour
         _acceleration = new Vector3();
         _baseScale = transform.localScale;
         _rb = GetComponent<Rigidbody>();
-        _anim = GetComponent<Animator>();
+        _anim = GetComponent<Animator>(); 
     }
 
     private void FixedUpdate()
@@ -57,11 +59,11 @@ public class Pet : MonoBehaviour
 
         if (transform.localScale.x <= _targetScale.x)
         {
-            t += 0.1f * Time.fixedDeltaTime;
+            t += 0.01f * Time.fixedDeltaTime;
         }
         else
         {
-            t -= 0.1f * Time.fixedDeltaTime;
+            t -= 0.01f * Time.fixedDeltaTime;
         }
 
         if (t < 0)
@@ -79,30 +81,29 @@ public class Pet : MonoBehaviour
     private Vector3 SquashAndStretch()
     {
         float velocityMagnitude = _rb.linearVelocity.magnitude;
-        float modifiedScale = _baseScale.x * velocityMagnitude;
+        float modifiedXScale = _baseScale.x * velocityMagnitude;
 
-        if (modifiedScale <= _baseScale.x)
+        if (modifiedXScale <= _baseScale.x)
         {
-            modifiedScale = _baseScale.x;
+            modifiedXScale = _baseScale.x;
         }
-        else if (modifiedScale >= MAX_SCALE)
+        else if (modifiedXScale >= MAX_SCALE)
         {
-            modifiedScale = MAX_SCALE;
+            modifiedXScale = MAX_SCALE;
         }
 
         return new Vector3(
-            modifiedScale,
-            _baseScale.y,
+            modifiedXScale,
+            _baseScale.y/modifiedXScale,
             _baseScale.z);
     }
 
     private Vector3 InterpolateScale()
     {
-        Vector3 baseScale = transform.localScale;
         return new Vector3(
-            Mathf.Lerp(baseScale.x, _targetScale.x, _t),
-            baseScale.y, 
-            baseScale.z
+            Mathf.Lerp(_baseScale.x, _targetScale.x, _t),
+            Mathf.Lerp(_baseScale.y, _targetScale.y, _t), 
+            _baseScale.z
         );
     }
 
@@ -115,12 +116,38 @@ public class Pet : MonoBehaviour
     {
         if (Application.isPlaying && Application.isEditor)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, _acceleration);
             Gizmos.color = Color.green;
-            Gizmos.DrawRay(transform.position, _rb.angularVelocity);
+            Gizmos.DrawRay(transform.position, _acceleration);
             Gizmos.color = Color.blue;
             Gizmos.DrawRay(transform.position, _rb.linearVelocity);
+        }
+    }
+
+    private void OnGUI()
+    {
+        if (_showDebug)
+        {
+            string text = $"PET DEBUG INFO\n" +
+                $"Linear velocity vector (v): {_rb.linearVelocity}\n" +
+                $"v-magnitude: {MathF.Round(_rb.linearVelocity.magnitude, 3)}\n" +
+                $"Acceleration vector (a): {_acceleration}\n" +
+                $"a-magnitude: {MathF.Round(_acceleration.magnitude, 3)}\n" +
+                $"Base scale vector: {_baseScale}\n" +
+                $"Local scale vector: {transform.localScale}\n" +
+                $"Target scale vector: {_targetScale}\n" +
+                $"Interpolation: " +
+                $"(x: {_baseScale.x}, " +
+                $"y: {_targetScale.x}, " +
+                $"t:{_t})" +
+                $"lerp: {Mathf.Lerp(_baseScale.x, _targetScale.x, _t)}";
+            GUILayout.Box(text);
+        }
+
+        GUILayout.Space(10);
+
+        if (GUILayout.Button("Toggle Debug Info"))
+        {
+            _showDebug = !_showDebug;
         }
     }
 }
