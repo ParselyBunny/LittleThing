@@ -6,7 +6,7 @@ public class Pet : MonoBehaviour
 {
     public int MoveStrength = 100;
 
-    private const float MAX_SCALE = 0.75f;
+    private const float MAX_SCALE = 0.6f;
 
     private Rigidbody _rb;
     private Animator _anim;
@@ -15,11 +15,13 @@ public class Pet : MonoBehaviour
     private Vector3 _targetScale;
     private Vector3 _baseScale;
     private float _t;  // Scale interpolator
+    private float _tRate;
     private bool _showDebug = true;
 
     private void Start()
     {
         _t = 0.0f;
+        _tRate = 0.01f;
         _stats = new Stats();
         _acceleration = new Vector3();
         _baseScale = transform.localScale;
@@ -53,17 +55,37 @@ public class Pet : MonoBehaviour
         }
     }
 
+    private Vector3 SquashAndStretch()
+    {
+        float velocityMagnitude = _rb.linearVelocity.magnitude;
+        float modifiedScale = _baseScale.x * velocityMagnitude;
+
+        if (modifiedScale <= _baseScale.x)
+        {
+            modifiedScale = _baseScale.x;
+        }
+        else if (modifiedScale >= MAX_SCALE)
+        {
+            modifiedScale = MAX_SCALE;
+        }
+
+        return new Vector3(
+            modifiedScale,
+            modifiedScale,
+            _baseScale.z);
+    }
+
     private float UpdateScaleInterpolator()
     {
         float t = _t;
 
         if (transform.localScale.x <= _targetScale.x)
         {
-            t += 0.01f * Time.fixedDeltaTime;
+            t += _tRate * Time.fixedDeltaTime;
         }
         else
         {
-            t -= 0.01f * Time.fixedDeltaTime;
+            t -= _tRate * Time.fixedDeltaTime;
         }
 
         if (t < 0)
@@ -78,33 +100,22 @@ public class Pet : MonoBehaviour
         return t;
     }
 
-    private Vector3 SquashAndStretch()
-    {
-        float velocityMagnitude = _rb.linearVelocity.magnitude;
-        float modifiedXScale = _baseScale.x * velocityMagnitude;
-
-        if (modifiedXScale <= _baseScale.x)
-        {
-            modifiedXScale = _baseScale.x;
-        }
-        else if (modifiedXScale >= MAX_SCALE)
-        {
-            modifiedXScale = MAX_SCALE;
-        }
-
-        return new Vector3(
-            modifiedXScale,
-            _baseScale.y/modifiedXScale,
-            _baseScale.z);
-    }
-
     private Vector3 InterpolateScale()
     {
-        return new Vector3(
-            Mathf.Lerp(_baseScale.x, _targetScale.x, _t),
-            Mathf.Lerp(_baseScale.y, _targetScale.y, _t), 
-            _baseScale.z
-        );
+        float x = Mathf.Lerp(transform.localScale.x, _targetScale.x, _t);
+        float y = Mathf.Lerp(transform.localScale.y, _targetScale.y, _t);
+
+        if (x >= MAX_SCALE)
+        {
+            x = MAX_SCALE;
+        }
+
+        if (y >= MAX_SCALE)
+        {
+            y = MAX_SCALE;
+        }
+
+        return new Vector3(x, y, transform.localScale.z);
     }
 
     private void Eat(Interaction interaction)
@@ -136,10 +147,8 @@ public class Pet : MonoBehaviour
                 $"Local scale vector: {transform.localScale}\n" +
                 $"Target scale vector: {_targetScale}\n" +
                 $"Interpolation: " +
-                $"(x: {_baseScale.x}, " +
-                $"y: {_targetScale.x}, " +
-                $"t:{_t})" +
-                $"lerp: {Mathf.Lerp(_baseScale.x, _targetScale.x, _t)}";
+                $"(x: {_baseScale.x}, y: {_targetScale.x}, t:{_t})\n" +
+                $"lerp: {Mathf.Lerp(transform.localScale.x, _targetScale.x, _t)}";
             GUILayout.Box(text);
         }
 
