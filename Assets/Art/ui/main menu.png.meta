@@ -103,10 +103,10 @@ TextureImporter:
       name: main menu_0
       rect:
         serializedVersion: 2
-        x: 102
-        y: 74
-        width: 2698
-        height: 1668
+        x: 74
+        y: 200
+        width: 1668
+        height: 2698
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
