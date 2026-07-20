@@ -21,7 +21,7 @@ public class Pet : MonoBehaviour
     private void Start()
     {
         _t = 0.0f;
-        _tRate = 0.01f;
+        _tRate = 0.5f;
         _stats = new Stats();
         _acceleration = new Vector3();
         _baseScale = transform.localScale;
@@ -42,9 +42,9 @@ public class Pet : MonoBehaviour
         }
 
         // Animation
-        _targetScale = SquashAndStretch();  // Change scale based on velocity
-        _t = UpdateScaleInterpolator();  // Handle update of interpolator
-        transform.localScale = InterpolateScale();  // Interpolate scale based on new interpolator and scale
+        _targetScale = SquashAndStretch();  // Change target scale based on velocity
+        _t = UpdateScaleInterpolator(_t);  // Handle update of interpolator
+        transform.localScale = InterpolateScale(_t);  // Interpolate scale based on new interpolator and scale
 
         // Handle falling out of world
         if (transform.position.y < Constants.WORLD_FLOOR)
@@ -75,15 +75,13 @@ public class Pet : MonoBehaviour
             _baseScale.z);
     }
 
-    private float UpdateScaleInterpolator()
+    private float UpdateScaleInterpolator(float t)
     {
-        float t = _t;
-
-        if (transform.localScale.x <= _targetScale.x)
+        if (transform.localScale.x < _targetScale.x)
         {
             t += _tRate * Time.fixedDeltaTime;
         }
-        else
+        else if (transform.localScale.x >= _targetScale.x)
         {
             t -= _tRate * Time.fixedDeltaTime;
         }
@@ -100,10 +98,10 @@ public class Pet : MonoBehaviour
         return t;
     }
 
-    private Vector3 InterpolateScale()
+    private Vector3 InterpolateScale(float t)
     {
-        float x = Mathf.Lerp(transform.localScale.x, _targetScale.x, _t);
-        float y = Mathf.Lerp(transform.localScale.y, _targetScale.y, _t);
+        float x = Mathf.Lerp(_baseScale.x, _targetScale.x, t);
+        float y = Mathf.Lerp(_baseScale.y, _targetScale.y, t);
 
         if (x >= MAX_SCALE)
         {
@@ -146,9 +144,7 @@ public class Pet : MonoBehaviour
                 $"Base scale vector: {_baseScale}\n" +
                 $"Local scale vector: {transform.localScale}\n" +
                 $"Target scale vector: {_targetScale}\n" +
-                $"Interpolation: " +
-                $"(x: {_baseScale.x}, y: {_targetScale.x}, t:{_t})\n" +
-                $"lerp: {Mathf.Lerp(transform.localScale.x, _targetScale.x, _t)}";
+                $"t:{_t})";
             GUILayout.Box(text);
         }
 
