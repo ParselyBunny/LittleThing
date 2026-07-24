@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System;
-using UnityEditor;
 
 public class Pet : MonoBehaviour
 {
     public int MoveStrength = 100;
+    public Food DebugFood;
 
     private const float MAX_SCALE = 0.6f;
 
@@ -26,7 +27,7 @@ public class Pet : MonoBehaviour
         _acceleration = new Vector3();
         _baseScale = transform.localScale;
         _rb = GetComponent<Rigidbody>();
-        _anim = GetComponent<Animator>(); 
+        _anim = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -52,6 +53,11 @@ public class Pet : MonoBehaviour
             _rb.position = Constants.START_POS;
             _rb.angularVelocity = Vector3.zero;
             _rb.linearVelocity = Vector3.zero;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            Eat(DebugFood);
         }
     }
 
@@ -116,9 +122,9 @@ public class Pet : MonoBehaviour
         return new Vector3(x, y, transform.localScale.z);
     }
 
-    private void Eat(Interaction interaction)
+    private void Eat(Food food)
     {
-        throw new NotImplementedException();
+        _stats.Resolve(food);
     }
 
     private void OnDrawGizmos()
@@ -149,6 +155,11 @@ public class Pet : MonoBehaviour
         }
 
         GUILayout.Space(10);
+
+        string stats = $"Hunger: {_stats.GetHunger()}, " +
+            $"Fun: {_stats.GetFun()}, " +
+            $"Love: {_stats.GetLove()}, ";
+        GUILayout.Box(stats);
 
         if (GUILayout.Button("Toggle Debug Info"))
         {
