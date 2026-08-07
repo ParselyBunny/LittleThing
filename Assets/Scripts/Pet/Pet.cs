@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System;
 
 public class Pet : MonoBehaviour
@@ -18,6 +17,21 @@ public class Pet : MonoBehaviour
     private float _t;  // Scale interpolator
     private float _tRate;
     private bool _showDebug = true;
+
+    public float GetStat(Constants.StatNames name)
+    {
+        switch (name)
+        {
+            case Constants.StatNames.HUNGER:
+                return _stats.GetHunger();
+            case Constants.StatNames.LOVE:
+                return _stats.GetLove();
+            case Constants.StatNames.FUN:
+                return _stats.GetFun();
+            default:
+                throw new Exception();
+        }
+    }
 
     private void Start()
     {
@@ -64,20 +78,31 @@ public class Pet : MonoBehaviour
     private Vector3 SquashAndStretch()
     {
         float velocityMagnitude = _rb.linearVelocity.magnitude;
-        float modifiedScale = _baseScale.x * velocityMagnitude;
+        float modifiedX = _baseScale.x * velocityMagnitude;
+        float modifiedY = _baseScale.y / modifiedX;
 
-        if (modifiedScale <= _baseScale.x)
+        // Bound checks
+        if (modifiedX <= _baseScale.x)
         {
-            modifiedScale = _baseScale.x;
+            modifiedX = _baseScale.x;
         }
-        else if (modifiedScale >= MAX_SCALE)
+        else if (modifiedX >= MAX_SCALE)
         {
-            modifiedScale = MAX_SCALE;
+            modifiedX = MAX_SCALE;
+        }
+
+        if (modifiedY <= _baseScale.y)
+        {
+            modifiedY = _baseScale.y;
+        }
+        else if (modifiedY >= MAX_SCALE)
+        {
+            modifiedY = MAX_SCALE;
         }
 
         return new Vector3(
-            modifiedScale,
-            modifiedScale,
+            modifiedX,
+            modifiedY,
             _baseScale.z);
     }
 
