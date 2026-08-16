@@ -22,7 +22,7 @@ public class Need
 
 	public float GetValue() => _value;
 
-	private float Add(float change)
+	public float Add(float change)
 	{
 		float val = _value + change;
 
