@@ -24,7 +24,7 @@ public class Stats
 	public void AddFun(Food food) => AddFun(food.Fun);
 	public void AddLove(float val) => _love.Add(val);
 	public void AddLove(Food food) => AddLove(food.Love);
-	public void Resolve(Interaction interact)
+	public void Resolve(Consumable interact)
 	{
 		if (interact is Food)
 		{

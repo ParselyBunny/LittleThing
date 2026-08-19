@@ -9,14 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d1687d6f4c228141ba60d475edcf1b4, type: 3}
+  m_Script: {fileID: 11500000, guid: 19c5f4d8816f92a4692818bfe0d4d7f2, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
   Label: Apple
-  Description: A bright red apple.
+  Description: A fresh, bright red tree fruit. Packed with vitamins and fiber, but
+    not flavor.
   TabCategory: 0
-  Locked: 0
   Icon: {fileID: 2800000, guid: a3cd24df8df326d4b82759566f51c2ec, type: 3}
-  Hunger: 20
+  Sound: {fileID: 8300000, guid: dd49a285df21f6b4c83673d29545a0a3, type: 3}
+  Locked: 0
+  Hunger: 15
   Fun: -5
   Love: 0

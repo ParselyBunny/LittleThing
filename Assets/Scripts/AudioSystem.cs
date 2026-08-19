@@ -18,7 +18,7 @@ public class AudioSystem : MonoBehaviour, IDataPersistence
         data.SfxVolume = SfxSource.volume;
     }
 
-    public void Play(AudioType audioType, AudioResource resource)
+    public void Play(AudioResource resource, AudioType audioType = AudioType.Sfx, bool loop = false)
     {
         switch (audioType)
         {
@@ -29,6 +29,7 @@ public class AudioSystem : MonoBehaviour, IDataPersistence
                 break;
             case AudioType.Sfx:
                 SfxSource.resource = resource;
+                SfxSource.loop = loop;
                 SfxSource.Play();
                 break;
         }

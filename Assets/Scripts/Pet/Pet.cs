@@ -4,18 +4,13 @@ using System;
 public class Pet : MonoBehaviour
 {
     public int MoveStrength = 100;
-    public Food DebugFood;
+    public Consumable DebugConsumable;
 
-    private const float MAX_SCALE = 0.6f;
-
+    private AudioSystem _audioSystem;
     private Rigidbody _rb;
     private Animator _anim;
     private Stats _stats;
     private Vector3 _acceleration;
-    private Vector3 _targetScale;
-    private Vector3 _baseScale;
-    private float _t;  // Scale interpolator
-    private float _tRate;
     private bool _showDebug = true;
 
     public float GetStat(Constants.StatNames name)
@@ -35,11 +30,9 @@ public class Pet : MonoBehaviour
 
     private void Start()
     {
-        _t = 0.0f;
-        _tRate = 0.5f;
         _stats = new Stats();
         _acceleration = new Vector3();
-        _baseScale = transform.localScale;
+        _audioSystem = FindAnyObjectByType<AudioSystem>();
         _rb = GetComponent<Rigidbody>();
         _anim = GetComponent<Animator>();
     }
@@ -56,11 +49,6 @@ public class Pet : MonoBehaviour
             _rb.AddForce(MoveStrength * _acceleration);
         }
 
-        // Animation
-        _targetScale = SquashAndStretch();  // Change target scale based on velocity
-        _t = UpdateScaleInterpolator(_t);  // Handle update of interpolator
-        transform.localScale = InterpolateScale(_t);  // Interpolate scale based on new interpolator and scale
-
         // Handle falling out of world
         if (transform.position.y < Constants.WORLD_FLOOR)
         {
@@ -69,87 +57,17 @@ public class Pet : MonoBehaviour
             _rb.linearVelocity = Vector3.zero;
         }
 
+        // DEBUG
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            Eat(DebugFood);
+            Consume(DebugConsumable);
         }
     }
 
-    private Vector3 SquashAndStretch()
+    private void Consume(Consumable consumable)
     {
-        float velocityMagnitude = _rb.linearVelocity.magnitude;
-        float modifiedX = _baseScale.x * velocityMagnitude;
-        float modifiedY = _baseScale.y / modifiedX;
-
-        // Bound checks
-        if (modifiedX <= _baseScale.x)
-        {
-            modifiedX = _baseScale.x;
-        }
-        else if (modifiedX >= MAX_SCALE)
-        {
-            modifiedX = MAX_SCALE;
-        }
-
-        if (modifiedY <= _baseScale.y)
-        {
-            modifiedY = _baseScale.y;
-        }
-        else if (modifiedY >= MAX_SCALE)
-        {
-            modifiedY = MAX_SCALE;
-        }
-
-        return new Vector3(
-            modifiedX,
-            modifiedY,
-            _baseScale.z);
-    }
-
-    private float UpdateScaleInterpolator(float t)
-    {
-        if (transform.localScale.x < _targetScale.x)
-        {
-            t += _tRate * Time.fixedDeltaTime;
-        }
-        else if (transform.localScale.x >= _targetScale.x)
-        {
-            t -= _tRate * Time.fixedDeltaTime;
-        }
-
-        if (t < 0)
-        {
-            t = 0;
-        }
-        else if (t > 1)
-        {
-            t = 1;
-        }
-
-        return t;
-    }
-
-    private Vector3 InterpolateScale(float t)
-    {
-        float x = Mathf.Lerp(_baseScale.x, _targetScale.x, t);
-        float y = Mathf.Lerp(_baseScale.y, _targetScale.y, t);
-
-        if (x >= MAX_SCALE)
-        {
-            x = MAX_SCALE;
-        }
-
-        if (y >= MAX_SCALE)
-        {
-            y = MAX_SCALE;
-        }
-
-        return new Vector3(x, y, transform.localScale.z);
-    }
-
-    private void Eat(Food food)
-    {
-        _stats.Resolve(food);
+        _stats.Resolve(consumable);
+        _audioSystem.Play(consumable.Sound);
     }
 
     private void OnDrawGizmos()
@@ -172,10 +90,7 @@ public class Pet : MonoBehaviour
                 $"v-magnitude: {MathF.Round(_rb.linearVelocity.magnitude, 3)}\n" +
                 $"Acceleration vector (a): {_acceleration}\n" +
                 $"a-magnitude: {MathF.Round(_acceleration.magnitude, 3)}\n" +
-                $"Base scale vector: {_baseScale}\n" +
-                $"Local scale vector: {transform.localScale}\n" +
-                $"Target scale vector: {_targetScale}\n" +
-                $"t:{_t})";
+                $"Local scale vector: {transform.localScale}\n";
             GUILayout.Box(text);
         }
 
