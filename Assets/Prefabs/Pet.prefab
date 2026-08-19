@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveStrength: 10
+  DebugConsumable: {fileID: 11400000, guid: 4c35879bf9a96984fb64f8d0673d48dc, type: 2}
 --- !u!54 &6122651012751711520
 Rigidbody:
   m_ObjectHideFlags: 0
