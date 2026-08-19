@@ -17,12 +17,14 @@ public class Pet : MonoBehaviour
     {
         switch (name)
         {
+            case Constants.StatNames.HEALTH:
+                return _stats.GetHealth;
             case Constants.StatNames.HUNGER:
-                return _stats.GetHunger();
-            case Constants.StatNames.LOVE:
-                return _stats.GetLove();
-            case Constants.StatNames.FUN:
-                return _stats.GetFun();
+                return _stats.GetHunger;
+            case Constants.StatNames.HYGIENE:
+                return _stats.GetHygiene;
+            case Constants.StatNames.HAPPY:
+                return _stats.GetHappy;
             default:
                 throw new Exception();
         }
@@ -96,9 +98,7 @@ public class Pet : MonoBehaviour
 
         GUILayout.Space(10);
 
-        string stats = $"Hunger: {_stats.GetHunger()}, " +
-            $"Fun: {_stats.GetFun()}, " +
-            $"Love: {_stats.GetLove()}, ";
+        string stats = $"Hunger: {_stats.GetHunger}, ";
         GUILayout.Box(stats);
 
         if (GUILayout.Button("Toggle Debug Info"))

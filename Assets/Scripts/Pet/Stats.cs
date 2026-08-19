@@ -1,39 +1,34 @@
 using UnityEngine;
-using System;
 
 // Handle the Pet's vital statistics
 public class Stats
 {
-	Need _hunger = new("Hunger", 100f, 100f);
-	Need _fun = new("Fun", 100f, 100f);
-	Need _love = new("Love", 100f, 100f);
+	Need Health = new("Health", 100f, 100f);
+	Need Hunger = new("Hunger", 100f, 100f);
+	Need Hygiene = new("Hygiene", 100f, 100f);
+	Need Happy = new("Happy", 100f, 100f);
 
 	public void Update()
 	{
-		_hunger.Update(Time.deltaTime);
-		_fun.Update(Time.deltaTime);
-		_love.Update(Time.deltaTime);
+		Health.Update(Time.deltaTime);
+		Hunger.Update(Time.deltaTime);
+		Hygiene.Update(Time.deltaTime);
+		Happy.Update(Time.deltaTime);
 	}
 
-	public float GetHunger() => _hunger.GetValue();
-	public float GetFun() => _fun.GetValue();
-	public float GetLove() => _love.GetValue();
-	public void AddHunger(float val) => _hunger.Add(val);
-	public void AddHunger(Food food) => AddHunger(food.Hunger);
-	public void AddFun(float val) => _fun.Add(val);
-	public void AddFun(Food food) => AddFun(food.Fun);
-	public void AddLove(float val) => _love.Add(val);
-	public void AddLove(Food food) => AddLove(food.Love);
-	public void Resolve(Consumable interact)
+	public void Resolve(Consumable consumable)
 	{
-		if (interact is Food)
+		if (consumable != null)
 		{
-			Food f = interact as Food;
-			AddHunger(f);
-		}
-		else
-		{
-			throw new NotImplementedException();
-		}
+			Health.Add(consumable.Health);
+			Hunger.Add(consumable.Hunger);
+			Hygiene.Add(consumable.Hygiene);
+			Happy.Add(consumable.Happy);
+        }
 	}
+
+	public float GetHealth => Health.GetValue();
+	public float GetHunger => Hunger.GetValue();
+	public float GetHygiene => Hygiene.GetValue();
+    public float GetHappy => Happy.GetValue();
 }

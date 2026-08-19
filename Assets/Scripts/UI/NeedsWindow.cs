@@ -3,13 +3,14 @@ using UnityEngine.UI;
 
 public class NeedsWindow : MonoBehaviour
 {
+    public Slider Health;
     public Slider Hunger;
-    public Slider Love;
-    public Slider Fun;
+    public Slider Hygiene;
+    public Slider Happy;
 
     private Pet _pet;
 
-    void Start()
+    private void Start()
     {
         _pet = FindAnyObjectByType<Pet>();
 
@@ -17,15 +18,20 @@ public class NeedsWindow : MonoBehaviour
         {
             Debug.LogError("Can't find Pet object.");
         }
+
+        SetStats();
     }
 
-    void Update()
+    private void Update()
     {
-        if (_pet != null)
-        {
-            Hunger.value = _pet.GetStat(Constants.StatNames.HUNGER);
-            Love.value = _pet.GetStat(Constants.StatNames.LOVE);
-            Fun.value = _pet.GetStat(Constants.StatNames.FUN);
-        }
+        SetStats();
+    }
+
+    private void SetStats()
+    {
+        Health.value = _pet.GetStat(Constants.StatNames.HEALTH);
+        Hunger.value = _pet.GetStat(Constants.StatNames.HUNGER);
+        Hygiene.value = _pet.GetStat(Constants.StatNames.HYGIENE);
+        Happy.value = _pet.GetStat(Constants.StatNames.HAPPY);
     }
 }

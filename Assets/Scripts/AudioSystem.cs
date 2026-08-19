@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using static Constants;
 
 public class AudioSystem : MonoBehaviour, IDataPersistence
 {
@@ -18,26 +19,22 @@ public class AudioSystem : MonoBehaviour, IDataPersistence
         data.SfxVolume = SfxSource.volume;
     }
 
-    public void Play(AudioResource resource, AudioType audioType = AudioType.Sfx, bool loop = false)
+    public void Play(AudioResource resource, 
+        AudioChannel audioType = AudioChannel.Sfx, 
+        bool loop = false)
     {
         switch (audioType)
         {
-            case AudioType.Music:
+            case AudioChannel.Music:
                 MusicSource.resource = resource;
                 MusicSource.loop = true;
                 MusicSource.Play();
                 break;
-            case AudioType.Sfx:
+            case AudioChannel.Sfx:
                 SfxSource.resource = resource;
                 SfxSource.loop = loop;
                 SfxSource.Play();
                 break;
         }
-    }
-
-    public enum AudioType
-    {
-        Music,
-        Sfx,
     }
 }

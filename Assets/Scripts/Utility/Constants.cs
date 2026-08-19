@@ -17,9 +17,16 @@ public static class Constants
 
     public enum StatNames
     {
+        HEALTH,
         HUNGER,
-        LOVE,
-        FUN,
+        HYGIENE,
+        HAPPY,
+    }
+
+    public enum AudioChannel
+    {
+        Music,
+        Sfx,
     }
 
     public static int WORLD_FLOOR = -50;
