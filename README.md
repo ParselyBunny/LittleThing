@@ -71,3 +71,7 @@ License: Attribution 4.0
 quick woosh by florianreichelt
 https://freesound.org/s/683101/
 License: Creative Commons 0
+
+Splat/Squish 1-4 by mrickey13 
+https://freesound.org/s/515621/
+License: Creative Commons 0
