@@ -1,14 +1,16 @@
 using UnityEngine;
 using System;
+using Unity.Mathematics;
 
 public class Pet : MonoBehaviour
 {
     public int MoveStrength = 100;
+    public AudioClip[] StepSfx;
     public Consumable DebugConsumable;
+    public Animator Animator;
 
     private AudioSystem _audioSystem;
     private Rigidbody _rb;
-    private Animator _anim;
     private Stats _stats;
     private Vector3 _acceleration;
     private bool _showDebug = true;
@@ -36,7 +38,11 @@ public class Pet : MonoBehaviour
         _acceleration = new Vector3();
         _audioSystem = FindAnyObjectByType<AudioSystem>();
         _rb = GetComponent<Rigidbody>();
-        _anim = GetComponent<Animator>();
+
+        if (Animator == null)
+        {
+            Animator = GetComponent<Animator>();
+        }
     }
 
     private void FixedUpdate()
@@ -51,6 +57,13 @@ public class Pet : MonoBehaviour
             _rb.AddForce(MoveStrength * _acceleration);
         }
 
+        Animator.speed = _rb.linearVelocity.magnitude;
+
+        if (Animator.speed > 0)
+        {
+            _audioSystem.Play(StepSfx[UnityEngine.Random.Range(0, StepSfx.Length - 1)]);
+        }
+
         // Handle falling out of world
         if (transform.position.y < Constants.WORLD_FLOOR)
         {
@@ -58,16 +71,11 @@ public class Pet : MonoBehaviour
             _rb.angularVelocity = Vector3.zero;
             _rb.linearVelocity = Vector3.zero;
         }
-
-        // DEBUG
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Consume(DebugConsumable);
-        }
     }
 
     private void Consume(Consumable consumable)
     {
+        Debug.Log($"Ate {consumable.Label}");
         _stats.Resolve(consumable);
         _audioSystem.Play(consumable.Sound);
     }
