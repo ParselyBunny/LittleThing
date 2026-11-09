@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using Unity.Mathematics;
 
 public class Pet : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class Pet : MonoBehaviour
     private Rigidbody _rb;
     private Stats _stats;
     private Vector3 _acceleration;
-    private bool _showDebug = true;
+    private bool _showDebug = false;
 
     public float GetStat(Constants.StatNames name)
     {
