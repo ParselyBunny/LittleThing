@@ -99,13 +99,13 @@ public class Pet : MonoBehaviour
                 $"a-magnitude: {MathF.Round(_acceleration.magnitude, 3)}\n" +
                 $"Local scale vector: {transform.localScale}\n";
             GUILayout.Box(text);
+
+            GUILayout.Space(10);
+
+            string stats = $"Hunger: {_stats.GetHunger}, ";
+            GUILayout.Box(stats);
         }
-
-        GUILayout.Space(10);
-
-        string stats = $"Hunger: {_stats.GetHunger}, ";
-        GUILayout.Box(stats);
-
+        
         if (GUILayout.Button("Toggle Debug Info"))
         {
             _showDebug = !_showDebug;
