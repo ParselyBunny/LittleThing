@@ -8,6 +8,7 @@ public class Pet : MonoBehaviour
     public AudioClip[] StepSfx;
     public Consumable DebugConsumable;
     public Animator Animator;
+    public ParticleSystem ParticleSystem;
 
     private AudioSystem _audioSystem;
     private Rigidbody _rb;
@@ -55,14 +56,11 @@ public class Pet : MonoBehaviour
             _acceleration.z = UnityEngine.Random.Range(-50f, 50f);
 
             _rb.AddForce(MoveStrength * _acceleration);
-        }
-
-        Animator.speed = _rb.linearVelocity.magnitude;
-
-        if (Animator.speed > 0)
-        {
             _audioSystem.Play(StepSfx[UnityEngine.Random.Range(0, StepSfx.Length - 1)]);
+            ParticleSystem.Emit(1);
         }
+
+        Animator.speed = _rb.linearVelocity.magnitude / 10;
 
         // Handle falling out of world
         if (transform.position.y < Constants.WORLD_FLOOR)
